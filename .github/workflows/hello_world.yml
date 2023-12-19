@@ -15,20 +15,17 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Print Information
-        run: |
-          echo "This is a Hello, World! workflow with GCP bucket creation."
-          echo "Secrets are properly set up."
-
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@main
         with:
-          version: '356.0.0'  # You can update this version to the latest if needed
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           service_account_key: ${{ secrets.GCP_SA_KEY }}
-
-      - name: Create GCP Bucket
+          export_default_credentials: true
+      
+      - name: Check gcloud installation
         run: |
-          echo "Creating GCP bucket..."
-          gsutil mb gs://staging123
-          echo "GCP bucket created successfully."
+          gcloud info
+      
+      - name: Check gcloud config
+        run: |
+          gcloud info gcloud config configurations list
