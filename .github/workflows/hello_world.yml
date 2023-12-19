@@ -21,7 +21,7 @@ jobs:
           echo "Secrets are properly set up."
 
       - name: Set up Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@master
+        uses: google-github-actions/setup-gcloud@main
         with:
           version: '356.0.0'  # You can update this version to the latest if needed
           project_id: ${{ secrets.GCP_PROJECT_ID }}
