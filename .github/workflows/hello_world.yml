@@ -23,9 +23,7 @@ jobs:
           export_default_credentials: true
       
       - name: Check gcloud installation
-        run: |
-          gcloud info
+        run: gcloud info
       
       - name: Check gcloud config
-        run: |
-          gcloud info gcloud config configurations list
+        run: gcloud config configurations list
