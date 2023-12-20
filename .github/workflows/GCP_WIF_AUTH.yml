@@ -1,12 +1,11 @@
-name: GCP WIF authentication
-run-name: ${{ github.actor }} triggered the deployment
-
+name: List services in GCP
 on:
   workflow_dispatch:
 
 permissions:
   id-token: write
-  contents: read
+env:
+  PROJECT_ID: '${{ secrets.}}'
 
 jobs:
   Get_OIDC_ID_token:
@@ -17,10 +16,10 @@ jobs:
       uses: 'google-github-actions/auth@v0.3.1'
       with:
           create_credentials_file: 'true'
-          workload_identity_provider: '<example-workload-identity-provider>'
-          service_account: '<example-service-account>'
+          workload_identity_provider: 'projects/204905498895/locations/global/workloadIdentityPools/my-pool/providers/github'
+          service_account: 'data-pipeline@burner-sidsoni1.iam.gserviceaccount.com'
     - id: 'gcloud'
       name: 'gcloud'
       run: |-
         gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
-        gcloud services list
+        gcloud services list --project cloudquicklab
