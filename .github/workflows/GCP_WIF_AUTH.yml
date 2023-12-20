@@ -24,4 +24,4 @@ jobs:
       - id: 'gcloud'
         name: 'gcloud'
         run: |-
-          gcloud services list
+          gcloud services list --project='${{ secrets.WIF_PROVIDER }}'
