@@ -12,7 +12,7 @@ jobs:
       id-token: 'write'
 
     steps:
-      - id: 'Google auth'
+      - id: Google Auth
         uses: 'google-github-actions/auth@v2'
         with:
           workload_identity_provider: '${{ secrets.WIF_PROVIDER }}'
