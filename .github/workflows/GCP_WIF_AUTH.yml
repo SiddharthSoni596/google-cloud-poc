@@ -24,5 +24,4 @@ jobs:
       - id: 'gcloud'
         name: 'gcloud'
         run: |-
-          gcloud auth login
           gcloud services list
