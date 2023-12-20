@@ -1,29 +1,32 @@
-name: List services in GCP
-on:
-  workflow_dispatch:
-
-permissions:
-  id-token: write
-env:
-  PROJECT_ID: '${{ secrets.WIF_PROVIDER }}'
-
+name: Get secrets from secret manager
+on: 
+  workflow_dispatch
 jobs:
-  Get_OIDC_ID_token:
+  get-secret:
     runs-on: ubuntu-latest
+    # Add "id-token" with the intended permissions.
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
     steps:
-    - name: 'Checkout Branches'
-      uses: 'actions/checkout@v4'
-      
+    - uses: 'actions/checkout@v3'
+
+    # Configure Workload Identity Federation via a credentials file.
     - id: 'auth'
-      name: 'Authenticate to GCP'
-      uses: 'google-github-actions/auth@v2'
+      name: 'Authenticate to Google Cloud'
+      uses: 'google-github-actions/auth@v1'
       with:
-          token_format: 'access_token'
-          create_credentials_file: 'true'
-          workload_identity_provider: 'projects/$PROJECT_ID/locations/global/workloadIdentityPools/my-pool/providers/github'
-          service_account: 'data-pipeline@burner-sidsoni1.iam.gserviceaccount.com'
+        token_format: 'access_token'
+        workload_identity_provider: 'projects/204905498895/locations/global/workloadIdentityPools/test-pool/providers/github'
+        service_account: 'test-secret@burner-sidsoni1.iam.gserviceaccount.com'
+
+    # Install gcloud, `setup-gcloud` automatically picks up authentication from `auth`.
+    - name: 'Set up Cloud SDK'
+      uses: 'google-github-actions/setup-gcloud@v1'
+
+    # Now you can run gcloud commands authenticated as the impersonated service account.
     - id: 'gcloud'
       name: 'gcloud'
       run: |-
-        gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
-        gcloud services list --project burner-sidsoni1
+        gcloud secrets versions access "latest" --secret "my-secret"
