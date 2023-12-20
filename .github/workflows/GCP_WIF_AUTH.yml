@@ -4,24 +4,23 @@ run-name: ${{ github.actor }} triggered the deployment
 on:
   workflow_dispatch:
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
-  build:
+  Get_OIDC_ID_token:
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write # This is required for requesting the JWT
-      contents: read  # This is required for actions/checkout
-
-
     steps:
-      - id: 'auth'
-        name: 'Authenticate to GCP'
-        uses: 'google-github-actions/auth@v0.3.1'
-        with:
-          create_credentials_file: 'true' 
-          workload_identity_provider: '${{ secrets.WIF_PROVIDER }}'
-          service_account: '${{ secrets.SA_EMAIL }}'
-  
-      - id: 'gcloud'
-        name: 'gcloud'
-        run: |-
-          gcloud services list --project='${{ secrets.WIF_PROVIDER }}'
+    - id: 'auth'
+      name: 'Authenticate to GCP'
+      uses: 'google-github-actions/auth@v0.3.1'
+      with:
+          create_credentials_file: 'true'
+          workload_identity_provider: '<example-workload-identity-provider>'
+          service_account: '<example-service-account>'
+    - id: 'gcloud'
+      name: 'gcloud'
+      run: |-
+        gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
+        gcloud services list
