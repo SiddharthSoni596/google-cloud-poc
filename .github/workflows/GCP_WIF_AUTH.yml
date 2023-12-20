@@ -11,9 +11,12 @@ jobs:
   Get_OIDC_ID_token:
     runs-on: ubuntu-latest
     steps:
+    - name: 'Checkout Branches'
+      uses: 'actions/checkout@v4'
+      
     - id: 'auth'
       name: 'Authenticate to GCP'
-      uses: 'google-github-actions/auth@v0.3.1'
+      uses: 'google-github-actions/auth@v2'
       with:
           token_format: 'access_token'
           create_credentials_file: 'true'
@@ -23,4 +26,4 @@ jobs:
       name: 'gcloud'
       run: |-
         gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
-        gcloud services list --project cloudquicklab
+        gcloud services list --project burner-sidsoni1
